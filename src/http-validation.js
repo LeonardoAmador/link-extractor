@@ -1,26 +1,37 @@
+import chalk from "chalk";
+
 function extractLinks(linksArray) {
   return linksArray.map((linkObject) => Object.values(linkObject).join());
 }
 
 async function checkStatus(urlList) {
-  try {
     const statusArray = await Promise.all(
       urlList.map(async (url) => {
-        const response = await fetch(url, { method: "HEAD" });
-        return response.status;
+        try {
+          const response = await fetch(url, { method: "HEAD" });
+          return response.status;
+        } catch (error) {
+           return verifyError(error)
+        }
       })
     );
-
     return statusArray;
-  } catch (error) {
-    console.error("Error during status check:", error);
-    throw error;
-  }
+}
+
+function verifyError(error) {
+    if (error.cause.code === "ENOTFOUND") {
+        return "Link not found";
+    } else {
+        return "Something went wrong!";
+    }
 }
 
 export default async function validatedList(linksList) {
   const links = extractLinks(linksList);
   const status = await checkStatus(links);
-  console.log(status);
-  return status;
+
+  return linksList.map((object, index) => ({
+    ...object,
+    status: status[index],
+  }));
 }

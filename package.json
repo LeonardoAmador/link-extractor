@@ -9,17 +9,9 @@
     "cli": "node ./src/cli.js ./arquivos/texto.md",
     "cli:validate": "node ./src/cli.js ./arquivos/texto.md --validate"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/alura-cursos/2708-node-lib-md.git"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/alura-cursos/2708-node-lib-md/issues"
-  },
-  "homepage": "https://github.com/alura-cursos/2708-node-lib-md#readme",
   "dependencies": {
     "chalk": "5.0.1"
   }
