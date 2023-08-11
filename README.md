@@ -11,10 +11,12 @@ link-extractor is a Node.js command-line tool that extracts and validates links 
 
 2. Navigate to the project directory:
 
+    ```bash
     cd link-extractor
 
 3. Install dependencies:
 
+    ```bash
     npm install
 
 ## Usage
@@ -23,11 +25,13 @@ link-extractor is a Node.js command-line tool that extracts and validates links 
 
 1. To extract and display links from a Markdown file:
 
+    ```bash
     npm run cli <path-to-file>
 
     Replace <path-to-file> with the relative or absolute path to the Markdown file you want to process.
 
 2. To extract, validate, and display links from a Markdown file:
-   
+
+   ```bash
     npm run cli:validate <path-to-file>
     Replace <path-to-file> with the relative or absolute path to the Markdown file you want to process.
