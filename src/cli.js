@@ -1,35 +1,48 @@
-import chalk from "chalk";
-import fs from "fs";
-import getFile from "./index.js";
+import chalk from 'chalk';
+import fs from 'fs';
+import readFile from './index.js';
+import validatedList from './http-validation.js';
 
-const path = process.argv;
+const args = process.argv;
 
-const printList = (result, id = "") =>
-  console.log(chalk.yellow("Links list"), chalk.black.bgGreen(id), result);
+function printList(validate, result, identifier = '') {
 
-const processText = async (arg) => {
-  const path = arg[2];
+  if (validate) {
+    console.log(
+      chalk.yellow('Validated list'),
+      chalk.black.bgGreen(identifier),
+      validatedList(result));
+  } else {
+    console.log(
+      chalk.yellow('Links list'),
+      chalk.black.bgGreen(identifier),
+      result);
+  }
+}
+
+async function processText(args) {
+  const filePath = args[2];
+  const validate = args[3] === "--validate";
 
   try {
-    fs.lstatSync(path);
+    fs.lstatSync(filePath);
   } catch (error) {
-    if (error.code === "ENOENT") {
-      console.log("No such file or directory!");
+    if (error.code === 'ENOENT') {
+      console.log('file or directory does not exist');
       return;
     }
   }
-  
-  if (fs.lstatSync(path).isFile()) {
-    const result = await getFile(path);
-    printList(result);
-  } else if (fs.lstatSync(path).isDirectory()) {
-    const files = await fs.promises.readdir(path);
 
-    files.forEach(async (fileName) => {
-      const list = await getFile(`${path}/${fileName}`);
-      printList(list, fileName);
-    });
+  if (fs.lstatSync(filePath).isFile()) {
+    const result = await readFile(args[2]);
+    printList(validate, result);
+  } else if (fs.lstatSync(filePath).isDirectory()) {
+    const files = await fs.promises.readdir(filePath)
+    files.forEach(async (filename) => {
+      const list = await readFile(`${filePath}/${filename}`)
+      printList(validate, list, filename)
+    })
   }
-};
+}
 
-processText(path);
+processText(args);

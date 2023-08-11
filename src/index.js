@@ -1,31 +1,26 @@
-import fs from "fs";
-import chalk from "chalk";
+import fs from 'fs';
+import chalk from 'chalk';
 
-const extractLinks = (text) => {
+function extractLinks(text) {
   const regex = /\[([^[\]]*?)\]\((https?:\/\/[^\s?#.].[^\s]*)\)/gm;
-  const linkFound = [...text.matchAll(regex)];
-  const results = linkFound.map(([_, text, href]) => ({ text, href }));
-
-  if (results.length !== 0) {
-    return results.map((link, index) => `${index + 1}. Text: ${link.text}, Href: ${link.href}`).join("\n");
-  } else {
-    return 'There are no links in the file';
-  }
+  const captures = [...text.matchAll(regex)];
+  const results = captures.map(capture => ({[capture[1]]: capture[2]}))
+  return results.length !== 0 ? results : 'no links found in the file';
 }
 
-const handleError = (error) => {
-  throw new Error(chalk.red(`${error.code}: No such file in directory.`));
-};
+function handleError(error) {
+  console.log(error);
+  throw new Error(chalk.red(error.code, 'no file in the directory'));
+}
 
-const getFile = async (path) => {
+async function readFile(filePath) {
   try {
-    const encoding = "utf-8";
-    const text = await fs.promises.readFile(path, encoding);
-
+    const encoding = 'utf-8';
+    const text = await fs.promises.readFile(filePath, encoding)
     return extractLinks(text);
   } catch (error) {
     handleError(error)
   }
 }
 
-export default getFile;
+export default readFile;
