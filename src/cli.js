@@ -46,3 +46,7 @@ async function processText(args) {
 }
 
 processText(args);
+
+const textTesxt = () => {
+  
+}
